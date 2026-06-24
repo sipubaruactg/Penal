@@ -30,7 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
             exit();
         } 
         
-        if (password_verify($password, $admin['password_hash'])) {
+        // এখানে সরাসরি পাসওয়ার্ড চেক করা হচ্ছে (কোনো হ্যাস নেই)
+        if ($password === $admin['password_hash']) {
             $_SESSION['admin_id'] = $admin['id'];
             $_SESSION['admin_name'] = $admin['admin_name'];
             $_SESSION['username'] = $admin['username'];
