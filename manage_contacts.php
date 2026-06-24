@@ -1,12 +1,12 @@
 <?php
 /**
- * Contact Management Module - FINAL PERFECTED VERSION
+ * Contact Management Module - FINAL & CORRECTED VERSION
  */
 require_once 'config/db.php';
 if (session_status() === PHP_SESSION_NONE) session_start();
 if (!isset($_SESSION['admin_id'])) { header("Location: login.php"); exit(); }
 
-// লজিক আগের মতোই রাখা হয়েছে
+// ১. ডাটা সেভ / এডিট প্রসেসিং
 if (isset($_POST['save_contact'])) {
     $id = $_POST['contact_id'];
     $name = $_POST['customer_name']; $mobile = $_POST['mobile_number'];
@@ -22,27 +22,26 @@ if (isset($_POST['save_contact'])) {
     }
 }
 
+// ২. CSV ফাইল ইমপোর্ট
 if (isset($_POST['import_csv'])) {
     if (isset($_FILES['csv_file']) && $_FILES['csv_file']['error'] == 0) {
-        $file_name = $_FILES['csv_file']['tmp_name'];
-        if (($handle = fopen($file_name, "r")) !== FALSE) {
-            fgetcsv($handle, 1000, ",");
-            $stmt = $conn->prepare("INSERT INTO customers (customer_name, mobile_number, email_id, location) VALUES (?, ?, ?, ?)");
-            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-                $stmt->bind_param("ssss", $data[0], $data[1], $data[2], $data[3]);
-                $stmt->execute();
-            }
-            fclose($handle);
+        $handle = fopen($_FILES['csv_file']['tmp_name'], "r");
+        fgetcsv($handle, 1000, ","); // হেডার স্কিপ
+        $stmt = $conn->prepare("INSERT INTO customers (customer_name, mobile_number, email_id, location) VALUES (?, ?, ?, ?)");
+        while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+            $stmt->bind_param("ssss", $data[0], $data[1], $data[2], $data[3]);
+            $stmt->execute();
         }
+        fclose($handle);
     }
 }
 
+// ৩. ডিলিট
 if (isset($_GET['delete'])) {
     $stmt = $conn->prepare("DELETE FROM customers WHERE id=?");
     $stmt->bind_param("i", $_GET['delete']);
     $stmt->execute();
-    header("Location: manage_contacts.php");
-    exit();
+    header("Location: manage_contacts.php"); exit();
 }
 $contacts = $conn->query("SELECT * FROM customers ORDER BY id DESC");
 ?>
@@ -56,17 +55,15 @@ $contacts = $conn->query("SELECT * FROM customers ORDER BY id DESC");
     <script src="https://cdn.tailwindcss.com"></script>
     <style>body { background-color: #030712; }</style>
 </head>
-<body class="text-white max-w-md mx-auto border-x border-gray-800 min-h-screen">
+<body class="text-white max-w-md mx-auto border-x border-gray-800 min-h-screen pb-10">
 
     <header class="bg-gray-900 border-b border-gray-800 p-4 flex justify-between items-center">
         <div class="text-center">
             <div id="date-part" class="text-[10px] font-black text-gray-400"></div>
             <div id="clock-part" class="text-[12px] font-black text-emerald-400"></div>
         </div>
-        <button onclick="toggleLang()" class="bg-indigo-600 px-4 py-2 rounded-xl text-[10px] font-black tracking-widest uppercase">বাংলা / EN</button>
+        <button onclick="toggleLang()" class="bg-indigo-600 px-4 py-2 rounded-xl text-[10px] font-black uppercase">বাংলা / EN</button>
     </header>
-
-    <div class="p-4"><a href="index.php" class="block w-full bg-gray-800 text-center py-4 rounded-2xl font-black text-sm tracking-widest">BACK</a></div>
 
     <div class="p-4 border-b border-gray-800">
         <form action="manage_contacts.php" method="POST" class="space-y-3">
@@ -76,6 +73,13 @@ $contacts = $conn->query("SELECT * FROM customers ORDER BY id DESC");
             <input type="text" name="email_id" id="e_f" placeholder="Email" class="w-full bg-gray-900 p-4 rounded-xl border border-gray-700 outline-none">
             <input type="text" name="location" id="l_f" placeholder="Location" class="w-full bg-gray-900 p-4 rounded-xl border border-gray-700 outline-none">
             <button type="submit" name="save_contact" id="s_b" class="w-full bg-blue-600 py-4 rounded-xl font-black text-sm uppercase">SAVE CONTACT</button>
+        </form>
+    </div>
+
+    <div class="p-4 border-b border-gray-800">
+        <form action="manage_contacts.php" method="POST" enctype="multipart/form-data" class="flex gap-2">
+            <input type="file" name="csv_file" accept=".csv" required class="w-full bg-gray-900 p-3 rounded-xl border border-gray-700 text-[10px]">
+            <button type="submit" name="import_csv" class="bg-green-600 px-6 py-2 rounded-xl font-black text-[10px] uppercase">Import</button>
         </form>
     </div>
 
@@ -91,20 +95,25 @@ $contacts = $conn->query("SELECT * FROM customers ORDER BY id DESC");
         <?php endwhile; ?>
     </div>
 
+    <div class="p-4">
+        <a href="index.php" class="block w-full bg-gray-800 text-center py-4 rounded-2xl font-black text-sm tracking-widest hover:bg-gray-700 transition">BACK</a>
+    </div>
+
     <script>
         let isBn = false;
+        const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         const bnD = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
         
         function updateClock() {
-            // বাংলাদেশ সময় (UTC+6) অনুযায়ী সময় সেট করা
             const now = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Dhaka"}));
-            let d = now.getDate(), m = now.getMonth() + 1, y = now.getFullYear();
+            let d = now.getDate(), m = now.getMonth(), day = now.getDay(), y = now.getFullYear();
             let hr = now.getHours(), min = now.getMinutes(), sec = now.getSeconds();
             let ampm = hr >= 12 ? 'PM' : 'AM';
             hr = hr % 12 || 12;
             
             let timeStr = `${hr}:${min.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')} ${ampm}`;
-            let dateStr = `${d}/${m}/${y}`;
+            let dateStr = `${days[day]}, ${months[m]} ${d}, ${y}`;
             
             if (isBn) {
                 document.getElementById('date-part').innerText = dateStr.replace(/\d/g, d=>bnD[d]);
