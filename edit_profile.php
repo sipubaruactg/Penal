@@ -14,7 +14,6 @@ if (isset($_POST['update_profile'])) {
     $phone = trim($_POST['phone_number']);
     $password = trim($_POST['password']);
 
-    // ভ্যালিডেশন
     if (empty($admin_name) || empty($email) || empty($username)) {
         $error = "Name, Email and Username are required!";
     } else {
@@ -54,39 +53,42 @@ $admin = $result->fetch_assoc();
 </head>
 <body class="flex flex-col h-screen max-w-md mx-auto border-x border-gray-800">
 
-    <header class="bg-gray-900 border-b border-gray-800 py-5 px-6 flex justify-between items-center shadow-lg">
-        <h1 id="title" class="text-xl font-black uppercase tracking-widest text-indigo-400">Admin Profile</h1>
-        <button onclick="toggleLang()" class="bg-gray-800 text-indigo-400 px-4 py-1.5 rounded-lg text-[10px] font-black uppercase hover:bg-gray-700 transition-all">বাংলা / EN</button>
+    <header class="bg-gray-900 border-b border-gray-800 py-4 px-6 flex justify-between items-center">
+        <h1 id="title" class="text-lg font-black uppercase tracking-widest text-indigo-400">Admin Profile</h1>
+        <button onclick="toggleLang()" class="bg-gray-800 text-indigo-400 px-3 py-1 rounded-lg text-[9px] font-black uppercase hover:bg-gray-700 transition-all">বাংলা / EN</button>
     </header>
 
-    <main class="flex-1 overflow-y-auto p-6 space-y-5 no-scrollbar">
-        <?php if($message): ?>
-            <div class="bg-green-500/10 text-green-400 border border-green-500/20 p-4 rounded-xl text-center font-bold text-[11px] uppercase tracking-widest animate-pulse"><?= $message ?></div>
-        <?php endif; ?>
-        <?php if($error): ?>
-            <div class="bg-red-500/10 text-red-400 border border-red-500/20 p-4 rounded-xl text-center font-bold text-[11px] uppercase tracking-widest"><?= $error ?></div>
-        <?php endif; ?>
+    <?php if($message || $error): ?>
+        <div class="px-6 pt-4">
+            <?php if($message): ?><div class="bg-green-500/10 text-green-400 border border-green-500/20 p-3 rounded-xl text-center font-bold text-[10px] uppercase tracking-widest"><?= $message ?></div><?php endif; ?>
+            <?php if($error): ?><div class="bg-red-500/10 text-red-400 border border-red-500/20 p-3 rounded-xl text-center font-bold text-[10px] uppercase tracking-widest"><?= $error ?></div><?php endif; ?>
+        </div>
+    <?php endif; ?>
 
+    <main class="flex-1 overflow-y-auto p-6 space-y-4 no-scrollbar">
         <form method="POST" class="space-y-4">
-            <div class="space-y-1.5"><label class="text-[9px] text-gray-500 uppercase font-bold tracking-widest ml-1" id="labelName">Name</label>
-            <input type="text" name="admin_name" value="<?= htmlspecialchars($admin['admin_name']) ?>" class="w-full p-4 rounded-xl border border-gray-800 focus:border-indigo-500 outline-none transition-all"></div>
+            <div><label class="text-[9px] text-gray-500 uppercase font-bold ml-1" id="labelName">Name</label>
+            <input type="text" name="admin_name" value="<?= htmlspecialchars($admin['admin_name']) ?>" class="w-full p-4 rounded-xl border border-gray-800 focus:border-indigo-500 outline-none"></div>
             
-            <div class="space-y-1.5"><label class="text-[9px] text-gray-500 uppercase font-bold tracking-widest ml-1" id="labelPhone">Phone</label>
-            <input type="text" name="phone_number" value="<?= htmlspecialchars($admin['phone_number']) ?>" class="w-full p-4 rounded-xl border border-gray-800 focus:border-indigo-500 outline-none transition-all"></div>
+            <div><label class="text-[9px] text-gray-500 uppercase font-bold ml-1" id="labelPhone">Phone</label>
+            <input type="text" name="phone_number" value="<?= htmlspecialchars($admin['phone_number']) ?>" class="w-full p-4 rounded-xl border border-gray-800 focus:border-indigo-500 outline-none"></div>
             
-            <div class="space-y-1.5"><label class="text-[9px] text-gray-500 uppercase font-bold tracking-widest ml-1" id="labelEmail">Email</label>
-            <input type="email" name="email" value="<?= htmlspecialchars($admin['email']) ?>" class="w-full p-4 rounded-xl border border-gray-800 focus:border-indigo-500 outline-none transition-all"></div>
+            <div><label class="text-[9px] text-gray-500 uppercase font-bold ml-1" id="labelEmail">Email</label>
+            <input type="email" name="email" value="<?= htmlspecialchars($admin['email']) ?>" class="w-full p-4 rounded-xl border border-gray-800 focus:border-indigo-500 outline-none"></div>
             
-            <div class="space-y-1.5"><label class="text-[9px] text-gray-500 uppercase font-bold tracking-widest ml-1" id="labelUser">Username</label>
-            <input type="text" name="username" value="<?= htmlspecialchars($admin['username']) ?>" class="w-full p-4 rounded-xl border border-gray-800 focus:border-indigo-500 outline-none transition-all"></div>
+            <div><label class="text-[9px] text-gray-500 uppercase font-bold ml-1" id="labelUser">Username</label>
+            <input type="text" name="username" value="<?= htmlspecialchars($admin['username']) ?>" class="w-full p-4 rounded-xl border border-gray-800 focus:border-indigo-500 outline-none"></div>
             
-            <div class="space-y-1.5"><label class="text-[9px] text-gray-500 uppercase font-bold tracking-widest ml-1" id="labelPass">Password</label>
-            <input type="text" name="password" value="<?= htmlspecialchars($admin['password_hash']) ?>" class="w-full p-4 rounded-xl border border-gray-800 focus:border-indigo-500 outline-none transition-all"></div>
+            <div><label class="text-[9px] text-gray-500 uppercase font-bold ml-1" id="labelPass">Password</label>
+            <input type="text" name="password" value="<?= htmlspecialchars($admin['password_hash']) ?>" class="w-full p-4 rounded-xl border border-gray-800 focus:border-indigo-500 outline-none"></div>
             
-            <button type="submit" name="update_profile" id="updateBtn" class="w-full bg-indigo-600 py-5 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-indigo-700 transition-all active:scale-95 shadow-lg shadow-indigo-950/50">Update Profile</button>
-            <a href="index.php" id="backBtn" class="w-full block text-center bg-gray-800 py-5 rounded-xl font-black text-xs uppercase tracking-widest text-gray-400 hover:bg-gray-700 transition-all active:scale-95">Back</a>
-        </form>
+            <div class="h-24"></div> </form>
     </main>
+
+    <footer class="absolute bottom-0 w-full max-w-md p-6 bg-gray-950/80 backdrop-blur-md border-t border-gray-800">
+        <button type="submit" formmethod="POST" name="update_profile" id="updateBtn" class="w-full bg-indigo-600 py-4 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-indigo-700 active:scale-95 transition-all shadow-lg shadow-indigo-950">Update Profile</button>
+        <a href="index.php" id="backBtn" class="w-full block text-center mt-3 bg-gray-800 py-4 rounded-xl font-black text-xs uppercase tracking-widest text-gray-400 hover:bg-gray-700 transition-all">Back</a>
+    </footer>
 
     <script>
         let isBangla = false;
