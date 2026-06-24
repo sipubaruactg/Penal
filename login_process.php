@@ -1,8 +1,4 @@
 <?php
-/**
- * Login Processing Module
- * Version: 2.0 (Secure)
- */
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -15,12 +11,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
     $password = trim($_POST['password']);
 
     if (empty($login_input) || empty($password)) {
-        $_SESSION['login_error'] = "All fields are required!";
+        $_SESSION['login_error'] = "সবগুলো ঘর পূরণ করুন!";
         header("Location: login.php");
         exit();
     }
 
-    $stmt = $conn->prepare("SELECT id, admin_name, username, email, password_hash, role, status FROM system_admins WHERE username = ? OR email = ? OR phone_number = ? LIMIT 1");
+    $stmt = $conn->prepare("SELECT id, admin_name, username, password_hash, status FROM system_admins WHERE username = ? OR email = ? OR phone_number = ? LIMIT 1");
     $stmt->bind_param("sss", $login_input, $login_input, $login_input);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -29,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
         $admin = $result->fetch_assoc();
 
         if ($admin['status'] !== 'Active') {
-            $_SESSION['login_error'] = "Account is " . htmlspecialchars($admin['status']) . "! Contact system admin.";
+            $_SESSION['login_error'] = "অ্যাকাউন্টটি একটিভ নয়!";
             header("Location: login.php");
             exit();
         } 
@@ -38,21 +34,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
             $_SESSION['admin_id'] = $admin['id'];
             $_SESSION['admin_name'] = $admin['admin_name'];
             $_SESSION['username'] = $admin['username'];
-            $_SESSION['role'] = $admin['role'];
-
-            $update_stmt = $conn->prepare("UPDATE system_admins SET last_login = CURRENT_TIMESTAMP WHERE id = ?");
-            $update_stmt->bind_param("i", $admin['id']);
-            $update_stmt->execute();
 
             header("Location: index.php");
             exit();
         } else {
-            $_SESSION['login_error'] = "Invalid password!";
+            $_SESSION['login_error'] = "ভুল পাসওয়ার্ড!";
             header("Location: login.php");
             exit();
         }
     } else {
-        $_SESSION['login_error'] = "Admin account not found!";
+        $_SESSION['login_error'] = "ইউজার পাওয়া যায়নি!";
         header("Location: login.php");
         exit();
     }
@@ -60,4 +51,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
     header("Location: login.php");
     exit();
 }
-?>
