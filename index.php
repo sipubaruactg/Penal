@@ -16,13 +16,14 @@ if (!isset($_SESSION['admin_id'])) { header("Location: login.php"); exit(); }
         .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         .menu-btn { background: linear-gradient(145deg, #111827, #0f172a); border: 1px solid #374151; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5); }
         .menu-btn:active { transform: scale(0.96); border-color: #4f46e5; }
-        #date-part, #clock-part { font-weight: 900; letter-spacing: 1px; }
+        /* ঘড়ি ও তারিখের ফন্ট বড় ও উজ্জ্বল করার জন্য */
+        #date-part, #clock-part { font-size: 14px; font-weight: 900; letter-spacing: 1.5px; text-shadow: 0 0 10px rgba(255,255,255,0.2); }
     </style>
 </head>
 <body class="flex flex-col h-screen max-w-md mx-auto border-x border-gray-800 shadow-2xl">
 
     <div class="bg-gray-900/80 px-5 py-4 flex justify-between items-center border-b border-gray-700 shrink-0">
-        <div class="text-[9px] text-gray-300 font-bold uppercase tracking-widest">
+        <div class="text-gray-100 font-bold uppercase tracking-widest">
             <span id="date-part"></span> <span id="clock-part" class="text-indigo-400"></span>
         </div>
         <button onclick="toggleLang()" class="bg-indigo-600/20 border border-indigo-500/50 text-indigo-300 px-4 py-1 rounded-full text-[10px] font-black uppercase hover:bg-indigo-600 transition-all">বাংলা / EN</button>
@@ -34,30 +35,29 @@ if (!isset($_SESSION['admin_id'])) { header("Location: login.php"); exit(); }
         <div class="grid-container">
             <a href="manage_internet_users.php" class="menu-btn p-6 rounded-3xl text-center transition-all">
                 <div class="text-4xl mb-3">🌐</div>
-                <div id="m1" class="text-[11px] font-black text-gray-100 uppercase tracking-widest">Users</div>
+                <div id="m1" class="text-[12px] font-black text-white uppercase tracking-widest leading-tight">INTERNET<br>USERS</div>
             </a>
             <a href="manage_contacts.php" class="menu-btn p-6 rounded-3xl text-center transition-all">
                 <div class="text-4xl mb-3">📞</div>
-                <div id="m2" class="text-[11px] font-black text-gray-100 uppercase tracking-widest">Contacts</div>
+                <div id="m2" class="text-[12px] font-black text-white uppercase tracking-widest leading-tight">MANAGE<br>CONTACTS</div>
             </a>
             <a href="export_contacts.php" class="menu-btn p-6 rounded-3xl text-center transition-all">
                 <div class="text-4xl mb-3">📥</div>
-                <div id="m3" class="text-[11px] font-black text-gray-100 uppercase tracking-widest">Export C</div>
+                <div id="m3" class="text-[12px] font-black text-white uppercase tracking-widest leading-tight">EXPORT<br>CONTACTS</div>
             </a>
             <a href="export_ppo.php" class="menu-btn p-6 rounded-3xl text-center transition-all">
                 <div class="text-4xl mb-3">📤</div>
-                <div id="m4" class="text-[11px] font-black text-gray-100 uppercase tracking-widest">Export PPO</div>
+                <div id="m4" class="text-[12px] font-black text-white uppercase tracking-widest leading-tight">EXPORT<br>PPO ID</div>
             </a>
         </div>
 
         <a href="edit_profile.php" class="menu-btn p-5 rounded-3xl flex items-center justify-center space-x-4 transition-all">
             <div class="text-3xl">⚙️</div>
-            <div id="m5" class="text-[11px] font-black text-gray-100 uppercase tracking-widest">Edit Profile</div>
+            <div id="m5" class="text-[12px] font-black text-white uppercase tracking-widest leading-tight">EDIT<br>PROFILE</div>
         </a>
 
-        <!-- সরাসরি লগআউট বাটন (কোনো কনফার্মেশন ছাড়াই) -->
-        <a href="logout.php" id="logout-btn" class="w-full py-5 bg-red-950/30 border border-red-500/30 text-red-400 text-center font-black text-[11px] rounded-3xl uppercase tracking-widest hover:bg-red-900/50 transition-all active:scale-95">
-            Logout System
+        <a href="logout.php" id="logout-btn" class="w-full py-5 bg-red-950/30 border border-red-500/30 text-red-400 text-center font-black text-[12px] rounded-3xl uppercase tracking-widest hover:bg-red-900/50 transition-all active:scale-95">
+            LOGOUT SYSTEM
         </a>
     </main>
 
@@ -85,13 +85,12 @@ if (!isset($_SESSION['admin_id'])) { header("Location: login.php"); exit(); }
 
         function toggleLang() {
             isBangla = !isBangla;
-            document.getElementById('m1').innerText = isBangla ? "ইউজার" : "Users";
-            document.getElementById('m2').innerText = isBangla ? "কন্টাক্টস" : "Contacts";
-            document.getElementById('m3').innerText = isBangla ? "এক্সপোর্ট C" : "Export C";
-            document.getElementById('m4').innerText = isBangla ? "এক্সপোর্ট PPO" : "Export PPO";
-            document.getElementById('m5').innerText = isBangla ? "প্রোফাইল এডিট" : "Edit Profile";
-            // লগআউট বাটন আপডেট
-            document.getElementById('logout-btn').innerText = isBangla ? "লগআউট সিস্টেম" : "Logout System";
+            document.getElementById('m1').innerHTML = isBangla ? "ইন্টারনেট<br>ইউজার" : "INTERNET<br>USERS";
+            document.getElementById('m2').innerHTML = isBangla ? "কন্টাক্ট<br>ম্যানেজ" : "MANAGE<br>CONTACTS";
+            document.getElementById('m3').innerHTML = isBangla ? "কন্টাক্ট<br>এক্সপোর্ট" : "EXPORT<br>CONTACTS";
+            document.getElementById('m4').innerHTML = isBangla ? "পি পি ও<br>এক্সপোর্ট" : "EXPORT<br>PPO ID";
+            document.getElementById('m5').innerHTML = isBangla ? "প্রোফাইল<br>এডিট" : "EDIT<br>PROFILE";
+            document.getElementById('logout-btn').innerText = isBangla ? "লগআউট সিস্টেম" : "LOGOUT SYSTEM";
             updateDisplay();
         }
     </script>
