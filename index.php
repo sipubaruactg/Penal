@@ -55,7 +55,8 @@ if (!isset($_SESSION['admin_id'])) { header("Location: login.php"); exit(); }
             <div id="m5" class="text-[11px] font-black text-gray-100 uppercase tracking-widest">Edit Profile</div>
         </a>
 
-        <a href="logout.php" onclick="return confirm('Logout?')" class="w-full py-5 bg-red-950/30 border border-red-500/30 text-red-400 text-center font-black text-[11px] rounded-3xl uppercase tracking-widest hover:bg-red-900/50 transition-all active:scale-95">
+        <!-- সরাসরি লগআউট বাটন (কোনো কনফার্মেশন ছাড়াই) -->
+        <a href="logout.php" id="logout-btn" class="w-full py-5 bg-red-950/30 border border-red-500/30 text-red-400 text-center font-black text-[11px] rounded-3xl uppercase tracking-widest hover:bg-red-900/50 transition-all active:scale-95">
             Logout System
         </a>
     </main>
@@ -89,6 +90,8 @@ if (!isset($_SESSION['admin_id'])) { header("Location: login.php"); exit(); }
             document.getElementById('m3').innerText = isBangla ? "এক্সপোর্ট C" : "Export C";
             document.getElementById('m4').innerText = isBangla ? "এক্সপোর্ট PPO" : "Export PPO";
             document.getElementById('m5').innerText = isBangla ? "প্রোফাইল এডিট" : "Edit Profile";
+            // লগআউট বাটন আপডেট
+            document.getElementById('logout-btn').innerText = isBangla ? "লগআউট সিস্টেম" : "Logout System";
             updateDisplay();
         }
     </script>
