@@ -1,17 +1,15 @@
-# PHP 8.1 Apache বেস ইমেজ
 FROM php:8.1-apache
 
-# সার্ভারের রুট ডিরেক্টরিতে কাজ করা
-WORKDIR /var/www/html
+# প্রয়োজনীয় এক্সটেনশন ইন্সটল করা
+RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
 
-# বর্তমান ফোল্ডারের ফাইলগুলো কনটেইনারে কপি করা
-COPY . .
-
-# Apache মডিউল এনাবল করা (URL Rewriting-এর জন্য)
+# Apache rewrite module চালু করা
 RUN a2enmod rewrite
 
-# পোর্ট ৮০ ওপেন রাখা
-EXPOSE 80
+# ফাইল কপি করা
+COPY . /var/www/html/
 
-# Apache অটো-স্টার্ট করার কমান্ড
-CMD ["apache2-foreground"]
+# পারমিশন সেট করা (সুরক্ষার জন্য)
+RUN chown -R www-data:www-data /var/www/html
+
+EXPOSE 80
