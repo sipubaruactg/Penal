@@ -22,14 +22,21 @@ if (isset($_POST['save_contact'])) {
     }
 }
 
-// ২. CSV ফাইল ইমপোর্ট
+// ২. CSV ফাইল ইমপোর্ট (সংশোধিত - খালি ডাটা থাকলে এরর দিবে না)
 if (isset($_POST['import_csv'])) {
     if (isset($_FILES['csv_file']) && $_FILES['csv_file']['error'] == 0) {
         $handle = fopen($_FILES['csv_file']['tmp_name'], "r");
         fgetcsv($handle, 1000, ","); // হেডার স্কিপ
         $stmt = $conn->prepare("INSERT INTO customers (customer_name, mobile_number, email_id, location) VALUES (?, ?, ?, ?)");
+        
         while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-            $stmt->bind_param("ssss", $data[0], $data[1], $data[2], $data[3]);
+            // মোবাইল নম্বর (ইনডেক্স ১) খালি থাকলে সেটিকে 'N/A' অথবা অন্য কিছু দিয়ে রিপ্লেস করে দেওয়া হলো
+            $c_name = !empty($data[0]) ? $data[0] : "Unknown";
+            $c_mobile = !empty($data[1]) ? $data[1] : "0000000000"; // নাল এড়াতে ডিফল্ট ভ্যালু
+            $c_email = !empty($data[2]) ? $data[2] : "";
+            $c_loc = !empty($data[3]) ? $data[3] : "";
+            
+            $stmt->bind_param("ssss", $c_name, $c_mobile, $c_email, $c_loc);
             $stmt->execute();
         }
         fclose($handle);
