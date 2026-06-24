@@ -1,11 +1,17 @@
-# PHP এবং Apache ব্যবহার করছি
+# PHP 8.1 Apache বেস ইমেজ
 FROM php:8.1-apache
 
-# ওয়ার্কিং ডিরেক্টরি সেট করা
+# সার্ভারের রুট ডিরেক্টরিতে কাজ করা
 WORKDIR /var/www/html
 
-# বর্তমান ফোল্ডারের সবকিছু সার্ভারে কপি করা
+# বর্তমান ফোল্ডারের ফাইলগুলো কনটেইনারে কপি করা
 COPY . .
 
-# Apache পোর্ট ওপেন করা
+# Apache মডিউল এনাবল করা (URL Rewriting-এর জন্য)
+RUN a2enmod rewrite
+
+# পোর্ট ৮০ ওপেন রাখা
 EXPOSE 80
+
+# Apache অটো-স্টার্ট করার কমান্ড
+CMD ["apache2-foreground"]
