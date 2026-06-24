@@ -1,6 +1,6 @@
 <?php
 /**
- * Contact Management Module - FINAL & CORRECTED VERSION
+ * Contact Management Module - FINAL & CORRECTED
  */
 require_once 'config/db.php';
 if (session_status() === PHP_SESSION_NONE) session_start();
@@ -22,17 +22,17 @@ if (isset($_POST['save_contact'])) {
     }
 }
 
-// ২. CSV ফাইল ইমপোর্ট (সংশোধিত - খালি ডাটা থাকলে এরর দিবে না)
+// ২. CSV ফাইল ইমপোর্ট
 if (isset($_POST['import_csv'])) {
     if (isset($_FILES['csv_file']) && $_FILES['csv_file']['error'] == 0) {
         $handle = fopen($_FILES['csv_file']['tmp_name'], "r");
-        fgetcsv($handle, 1000, ","); // হেডার স্কিপ
+        fgetcsv($handle, 1000, ","); 
         $stmt = $conn->prepare("INSERT INTO customers (customer_name, mobile_number, email_id, location) VALUES (?, ?, ?, ?)");
         
         while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-            // মোবাইল নম্বর (ইনডেক্স ১) খালি থাকলে সেটিকে 'N/A' অথবা অন্য কিছু দিয়ে রিপ্লেস করে দেওয়া হলো
+            // কোনো লিমিট নেই, ডাটা যতটুকু ততটুকুই সেভ হবে
             $c_name = !empty($data[0]) ? $data[0] : "Unknown";
-            $c_mobile = !empty($data[1]) ? $data[1] : "0000000000"; // নাল এড়াতে ডিফল্ট ভ্যালু
+            $c_mobile = !empty($data[1]) ? $data[1] : "0000000000";
             $c_email = !empty($data[2]) ? $data[2] : "";
             $c_loc = !empty($data[3]) ? $data[3] : "";
             
@@ -67,6 +67,7 @@ $contacts = $conn->query("SELECT * FROM customers ORDER BY id DESC");
 
     <header class="bg-gray-900 border-b border-gray-800 p-4 flex justify-between items-center">
         <div class="text-center">
+            <div id="day-part" class="text-[9px] font-black text-gray-500 uppercase tracking-widest"></div>
             <div id="date-part" class="text-[10px] font-black text-gray-400"></div>
             <div id="clock-part" class="text-[12px] font-black text-emerald-400"></div>
         </div>
@@ -109,8 +110,9 @@ $contacts = $conn->query("SELECT * FROM customers ORDER BY id DESC");
 
     <script>
         let isBn = false;
-        const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
         const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        const bnDays = ["রবিবার", "সোমবার", "মঙ্গলবার", "বুধবার", "বৃহস্পতিবার", "শুক্রবার", "শনিবার"];
         const bnD = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
         
         function updateClock() {
@@ -121,12 +123,14 @@ $contacts = $conn->query("SELECT * FROM customers ORDER BY id DESC");
             hr = hr % 12 || 12;
             
             let timeStr = `${hr}:${min.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')} ${ampm}`;
-            let dateStr = `${days[day]}, ${months[m]} ${d}, ${y}`;
+            let dateStr = `${months[m]} ${d}, ${y}`;
             
             if (isBn) {
-                document.getElementById('date-part').innerText = dateStr.replace(/\d/g, d=>bnD[d]);
+                document.getElementById('day-part').innerText = bnDays[day];
+                document.getElementById('date-part').innerText = `${d}/${m+1}/${y}`.replace(/\d/g, d=>bnD[d]);
                 document.getElementById('clock-part').innerText = timeStr.replace(/\d/g, d=>bnD[d]);
             } else {
+                document.getElementById('day-part').innerText = days[day];
                 document.getElementById('date-part').innerText = dateStr;
                 document.getElementById('clock-part').innerText = timeStr;
             }
