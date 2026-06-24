@@ -12,53 +12,57 @@ if (!isset($_SESSION['admin_id'])) { header("Location: login.php"); exit(); }
     <title>Core Admin Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { overflow: hidden; position: fixed; width: 100%; height: 100%; background-color: #030712; font-family: sans-serif; }
+        body { background-color: #030712; font-family: sans-serif; color: white; min-height: 100vh; }
         .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 16px; }
         .menu-btn { background: #111827; border: 1px solid #1f2937; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 130px; border-radius: 20px; transition: all 0.3s; }
         .menu-btn:active { transform: scale(0.95); border-color: #4f46e5; }
-        #date-part, #clock-part { font-size: 14px; font-weight: 900; letter-spacing: 1px; }
+        #date-part { font-size: 10px; font-weight: 900; letter-spacing: 1px; color: #9ca3af; text-transform: uppercase; }
+        #clock-part { font-size: 12px; font-weight: 900; letter-spacing: 1px; color: #10b981; }
     </style>
 </head>
-<body class="flex flex-col h-screen max-w-md mx-auto border-x border-gray-800 shadow-2xl">
+<body class="max-w-md mx-auto border-x border-gray-800 shadow-2xl">
 
-    <div class="bg-gray-900 px-6 py-4 flex justify-between items-center border-b border-gray-800 shrink-0">
-        <div class="text-gray-300 font-bold uppercase tracking-widest">
-            <span id="date-part"></span> <span id="clock-part" class="text-indigo-400"></span>
+    <div class="bg-gray-900 px-6 py-4 flex justify-between items-center border-b border-gray-800">
+        <div class="flex flex-col">
+            <span id="date-part"></span>
+            <span id="clock-part"></span>
         </div>
         <button onclick="toggleLang()" class="bg-indigo-600/20 border border-indigo-500/50 text-indigo-300 px-4 py-1 rounded-full text-[10px] font-black uppercase hover:bg-indigo-600 transition-all">বাংলা / EN</button>
     </div>
 
     <?php @include 'admin_header.php'; ?>
 
-    <main class="flex-1 p-4 overflow-y-auto">
+    <main class="flex flex-col p-4">
         <div class="grid-container">
             <a href="manage_internet_users.php" class="menu-btn">
                 <div class="text-4xl mb-3">🌐</div>
-                <div id="m1" class="text-[11px] font-black text-gray-100 uppercase tracking-widest text-center px-2">INTERNET USERS</div>
+                <div id="m1" class="text-[11px] font-black uppercase tracking-widest text-center px-2">INTERNET USERS</div>
             </a>
             <a href="manage_contacts.php" class="menu-btn">
                 <div class="text-4xl mb-3">📞</div>
-                <div id="m2" class="text-[11px] font-black text-gray-100 uppercase tracking-widest text-center px-2">MANAGE CONTACTS</div>
+                <div id="m2" class="text-[11px] font-black uppercase tracking-widest text-center px-2">MANAGE CONTACTS</div>
             </a>
             <a href="export_contacts.php" class="menu-btn">
                 <div class="text-4xl mb-3">📥</div>
-                <div id="m3" class="text-[11px] font-black text-gray-100 uppercase tracking-widest text-center px-2">EXPORT CONTACTS</div>
+                <div id="m3" class="text-[11px] font-black uppercase tracking-widest text-center px-2">EXPORT CONTACTS</div>
             </a>
             <a href="export_ppo.php" class="menu-btn">
                 <div class="text-4xl mb-3">📤</div>
-                <div id="m4" class="text-[11px] font-black text-gray-100 uppercase tracking-widest text-center px-2">EXPORT PPO ID</div>
+                <div id="m4" class="text-[11px] font-black uppercase tracking-widest text-center px-2">EXPORT PPO ID</div>
             </a>
         </div>
 
-        <div class="px-4">
+        <div class="px-4 mt-2">
             <a href="edit_profile.php" class="menu-btn w-full flex-row space-x-4 mb-4" style="height: 70px;">
                 <div class="text-3xl">⚙️</div>
-                <div id="m5" class="text-[11px] font-black text-gray-100 uppercase tracking-widest">EDIT PROFILE</div>
+                <div id="m5" class="text-[11px] font-black uppercase tracking-widest">EDIT PROFILE</div>
             </a>
 
-            <a href="logout.php" class="w-full py-5 bg-red-950/30 border border-red-500/30 text-red-400 text-center font-black text-[11px] rounded-2xl uppercase tracking-widest hover:bg-red-900/50 transition-all active:scale-95">
-                LOGOUT SYSTEM
-            </a>
+            <div class="flex justify-center w-full">
+                <a href="logout.php" class="w-full py-5 bg-red-950/30 border border-red-500/30 text-red-400 text-center font-black text-[11px] rounded-2xl uppercase tracking-widest hover:bg-red-900/50 transition-all active:scale-95">
+                    LOGOUT SYSTEM
+                </a>
+            </div>
         </div>
     </main>
 
@@ -71,18 +75,22 @@ if (!isset($_SESSION['admin_id'])) { header("Location: login.php"); exit(); }
         function updateDisplay() {
             const n = new Date();
             let h = n.getHours(), m = n.getMinutes(), s = n.getSeconds();
-            let ampm = h >= 12 ? 'PM' : 'AM', bAmpm = h >= 12 ? 'অপরাহ্ণ' : 'পূর্বাহ্ণ';
-            h = h % 12 || 12;
+            let ampm = h >= 12 ? 'PM' : 'AM';
+            let bnAmpm = h >= 12 ? 'অপরাহ্ণ' : 'পূর্বাহ্ণ';
+            let hr = h % 12 || 12;
 
             if (!isBangla) {
-                document.getElementById('date-part').innerText = n.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-                document.getElementById('clock-part').innerText = `${h}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')} ${ampm}`;
+                document.getElementById('date-part').innerText = `${n.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}`;
+                document.getElementById('clock-part').innerText = `${hr}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')} ${ampm}`;
             } else {
-                document.getElementById('date-part').innerText = `${bnDays[n.getDay()]}, ${n.getDate()} ${bnMonths[n.getMonth()]}`;
-                document.getElementById('clock-part').innerText = `${h.toString().replace(/[0-9]/g, d => bnDigits[d])}:${m.toString().padStart(2, '0').replace(/[0-9]/g, d => bnDigits[d])}:${s.toString().padStart(2, '0').replace(/[0-9]/g, d => bnDigits[d])} ${bAmpm}`;
+                let bnDate = `${bnDays[n.getDay()]}, ${n.getDate()} ${bnMonths[n.getMonth()]}`;
+                let bnTime = `${hr.toString().replace(/[0-9]/g, d => bnDigits[d])}:${m.toString().padStart(2, '0').replace(/[0-9]/g, d => bnDigits[d])}:${s.toString().padStart(2, '0').replace(/[0-9]/g, d => bnDigits[d])} ${bnAmpm}`;
+                document.getElementById('date-part').innerText = bnDate;
+                document.getElementById('clock-part').innerText = bnTime;
             }
         }
-        setInterval(updateDisplay, 1000); updateDisplay();
+        setInterval(updateDisplay, 1000); 
+        updateDisplay();
 
         function toggleLang() {
             isBangla = !isBangla;
