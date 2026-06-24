@@ -16,6 +16,7 @@ if (!isset($_SESSION['admin_id'])) { header("Location: login.php"); exit(); }
         .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .menu-btn { background: #111827; border: 1px solid #1f2937; }
         .menu-btn:active { transform: scale(0.95); }
+        #date-part, #clock-part { font-weight: 900; letter-spacing: 1px; }
     </style>
 </head>
 <body class="flex flex-col h-screen max-w-md mx-auto border-x border-gray-800">
@@ -27,7 +28,7 @@ if (!isset($_SESSION['admin_id'])) { header("Location: login.php"); exit(); }
         <button onclick="toggleLang()" class="bg-gray-800 text-indigo-400 px-3 py-1 rounded-lg text-[9px] font-black uppercase hover:bg-gray-700 transition-all">বাংলা / EN</button>
     </div>
 
-    <?php include 'admin_header.php'; ?>
+    <?php @include 'admin_header.php'; ?>
 
     <main class="flex-1 flex flex-col p-5 space-y-4 justify-center">
         <div class="grid-container">
@@ -54,7 +55,7 @@ if (!isset($_SESSION['admin_id'])) { header("Location: login.php"); exit(); }
             <div id="m5" class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Edit Profile</div>
         </a>
 
-        <a href="logout.php" onclick="return confirm('Logout?')" class="w-full py-4 bg-red-900/10 border border-red-500/20 text-red-500 text-center font-black text-[10px] rounded-2xl uppercase tracking-widest active:scale-95 transition-all">
+        <a href="logout.php" class="w-full py-4 bg-red-900/10 border border-red-500/20 text-red-500 text-center font-black text-[10px] rounded-2xl uppercase tracking-widest active:scale-95 transition-all">
             Logout System
         </a>
     </main>
