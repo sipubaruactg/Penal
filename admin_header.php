@@ -52,7 +52,7 @@ if (isset($_SESSION['admin_id'])) {
 <script>
     function updateClock() {
         const now = new Date();
-        const timeString = now.toLocaleTimeString('en-GB'); // ২৪ ঘণ্টা ফরম্যাট
+        const timeString = now.toLocaleTimeString('en-GB'); 
         const clockElement = document.getElementById('liveClock');
         if (clockElement) clockElement.textContent = timeString;
     }
