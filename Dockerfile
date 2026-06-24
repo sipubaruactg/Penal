@@ -1,21 +1,18 @@
-FROM php:8.2-apache
+# Node.js এর স্টেবল ভার্সন ব্যবহার করুন
+FROM node:20-slim
 
-# MySQL Extension Install
-RUN docker-php-ext-install mysqli pdo pdo_mysql
+# ওয়ার্কিং ডিরেক্টরি
+WORKDIR /app
 
-# Apache Rewrite Enable
-RUN a2enmod rewrite
+# প্যাকেজ ফাইল কপি ও ইনস্টল
+COPY package*.json ./
+RUN npm install --production
 
-# Apache-র ডিফল্ট পোর্ট পরিবর্তন করে Render-এর $PORT ব্যবহার করার ব্যবস্থা
-RUN sed -i 's/80/${PORT}/g' /etc/apache2/ports.conf /etc/apache2/sites-available/*.conf
+# পুরো প্রজেক্ট কপি করা
+COPY . .
 
-# Website Files Copy
-COPY . /var/www/html/
+# পোর্ট এক্সপোজ (রেন্ডার ৮০০০ বা ৩০০০ সাধারণত ডিফল্ট নেয়)
+EXPOSE 3000
 
-# Permission
-RUN chown -R www-data:www-data /var/www/html
-
-# Render-এর ডাইনামিক পোর্টের জন্য EXPOSE পরিবর্তন (ঐচ্ছিক, তবে ভালো অনুশীলন)
-EXPOSE 80
-
-CMD ["apache2-foreground"]
+# রান করার কমান্ড (স্টার্ট স্ক্রিপ্ট নিশ্চিত করুন)
+CMD ["npm", "start"]
