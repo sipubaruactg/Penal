@@ -1,17 +1,34 @@
 <?php
-// ডাটাবেজ থেকে লেটেস্ট এডমিন তথ্য সংগ্রহ
-$admin_info = null;
-if (isset($_SESSION['admin_id'])) {
-    $stmt = $conn->prepare("SELECT admin_name, role, email, phone, last_login, status FROM system_admins WHERE id = ?");
-    $stmt->bind_param("i", $_SESSION['admin_id']);
-    $stmt->execute();
-    $admin_info = $stmt->get_result()->fetch_assoc();
+// নিরাপত্তার জন্য এবং এরর এড়াতে ভেরিয়েবলগুলো আগে ডিফাইন করে নিন
+$admin_name = "Admin";
+$admin_role = "Role";
+$admin_email = "N/A";
+$admin_phone = "N/A";
+$admin_status = "Active";
+
+// ডাটাবেজ কানেকশন চেক করে ডাটা আনুন
+if (isset($_SESSION['admin_id']) && isset($conn)) {
+    $stmt = $conn->prepare("SELECT admin_name, role, email, phone, status FROM system_admins WHERE id = ?");
+    if ($stmt) {
+        $stmt->bind_param("i", $_SESSION['admin_id']);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($row = $result->fetch_assoc()) {
+            $admin_name = $row['admin_name'] ?? 'Admin';
+            $admin_role = $row['role'] ?? 'Role';
+            $admin_email = $row['email'] ?? 'N/A';
+            $admin_phone = $row['phone'] ?? 'N/A';
+            $admin_status = $row['status'] ?? 'Active';
+        }
+        $stmt->close();
+    }
 }
 ?>
 
-<header class="bg-gray-900 border-b border-gray-800 px-5 py-4 shrink-0 shadow-lg">
+<header class="bg-gray-900 border-b border-gray-800 px-5 py-4 shrink-0 shadow-lg w-full">
     <div class="flex items-center justify-between">
         
+        <!-- বাম পাশে: আইকন ও নাম -->
         <div class="flex items-center space-x-3">
             <div class="relative">
                 <div class="w-12 h-12 bg-indigo-600/20 rounded-full border border-indigo-500/30 flex items-center justify-center text-xl">
@@ -22,23 +39,24 @@ if (isset($_SESSION['admin_id'])) {
             
             <div class="flex flex-col">
                 <h2 class="text-[11px] font-black text-white uppercase tracking-widest">
-                    <?= htmlspecialchars($admin_info['admin_name'] ?? 'Admin') ?>
+                    <?= htmlspecialchars($admin_name) ?>
                 </h2>
                 <span class="text-[9px] text-indigo-400 font-bold uppercase tracking-wider">
-                    <?= htmlspecialchars($admin_info['role'] ?? 'Role') ?>
+                    <?= htmlspecialchars($admin_role) ?>
                 </span>
             </div>
         </div>
 
-        <div class="text-right space-y-1">
+        <!-- ডান পাশে: ডিটেইলস -->
+        <div class="text-right space-y-0.5">
             <div class="text-[8px] text-gray-400 uppercase tracking-widest font-bold">
-                Email: <span class="text-gray-200"><?= htmlspecialchars($admin_info['email'] ?? 'N/A') ?></span>
+                E: <span class="text-gray-200"><?= htmlspecialchars($admin_email) ?></span>
             </div>
             <div class="text-[8px] text-gray-400 uppercase tracking-widest font-bold">
-                Phone: <span class="text-gray-200"><?= htmlspecialchars($admin_info['phone'] ?? 'N/A') ?></span>
+                P: <span class="text-gray-200"><?= htmlspecialchars($admin_phone) ?></span>
             </div>
             <div class="text-[8px] text-gray-400 uppercase tracking-widest font-bold">
-                Status: <span class="text-emerald-500"><?= htmlspecialchars($admin_info['status'] ?? 'Active') ?></span>
+                S: <span class="text-emerald-500"><?= htmlspecialchars($admin_status) ?></span>
             </div>
         </div>
     </div>
