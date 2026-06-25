@@ -24,7 +24,8 @@ $contacts = $conn->query($sql);
 <body class="text-white max-w-md mx-auto min-h-screen">
 
 <div class="sticky top-0 bg-[#030712] p-4 border-b border-gray-800 z-10">
-    <a href="dashboard.php" class="text-[10px] font-black text-gray-500 mb-2 block">← BACK TO DASHBOARD</a>
+    <a href="manage_contacts.php" class="inline-block bg-gray-800 px-5 py-2 mb-4 rounded-xl text-xs font-black uppercase">← BACK</a>
+    
     <form method="GET" action="view_contacts.php">
         <input type="text" name="search" value="<?= htmlspecialchars($search) ?>" placeholder="Search Name or Number..." 
                class="w-full bg-gray-900 p-3 rounded-xl border border-gray-700 outline-none text-sm">
