@@ -39,7 +39,11 @@ if (isset($_POST['import_csv'])) {
 </head>
 <body class="flex flex-col h-screen p-6 text-white">
 
-    <h2 class="text-center font-black text-xl uppercase tracking-widest py-4">INPUT CONTACT</h2>
+    <header class="mb-4">
+        <a href="manage_contacts.php" class="inline-block bg-gray-800 px-5 py-2 rounded-xl text-xs font-black uppercase">← BACK</a>
+    </header>
+
+    <h2 class="text-center font-black text-xl uppercase tracking-widest mb-6">INPUT CONTACT</h2>
 
     <?php if($msg): ?>
         <div class="bg-green-600 text-center font-black py-3 rounded-2xl mb-4 animate-pulse"><?= $msg ?></div>
@@ -54,8 +58,6 @@ if (isset($_POST['import_csv'])) {
         
         <button type="submit" name="import_csv" class="w-full bg-blue-600 py-6 rounded-3xl font-black text-lg uppercase active:scale-95 transition-all">UPLOAD NOW</button>
     </form>
-
-    <a href="dashboard.php" class="block w-full bg-gray-800 text-center py-4 rounded-2xl font-black text-sm uppercase mt-4">BACK</a>
 
 </body>
 </html>
