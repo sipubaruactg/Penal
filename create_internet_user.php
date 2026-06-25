@@ -13,9 +13,11 @@ if (isset($_POST['save_user'])) {
     $p_name = $_POST['package_name'];
     $p_price = $_POST['package_price'];
     $status = $_POST['status'];
+    $act_date = $_POST['activation_date']; // নতুন
+    $exp_date = $_POST['expiry_date'];     // নতুন
 
-    $stmt = $conn->prepare("INSERT INTO internet_users (mikrotik_username, full_name, mobile_number, address, package_name, package_price, status) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssssds", $m_user, $f_name, $mobile, $address, $p_name, $p_price, $status);
+    $stmt = $conn->prepare("INSERT INTO internet_users (mikrotik_username, full_name, mobile_number, address, package_name, package_price, status, activation_date, expiry_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssssdsss", $m_user, $f_name, $mobile, $address, $p_name, $p_price, $status, $act_date, $exp_date);
     
     if ($stmt->execute()) {
         $message = "New user created successfully!";
@@ -42,6 +44,17 @@ if (isset($_POST['save_user'])) {
     <?php endif; ?>
 
     <form method="POST" class="bg-gray-900 p-4 rounded-xl space-y-3">
+        <div class="grid grid-cols-2 gap-2">
+            <div>
+                <label class="text-[10px] text-gray-400">Activation Date</label>
+                <input type="date" name="activation_date" required class="w-full bg-black p-3 rounded border border-gray-700">
+            </div>
+            <div>
+                <label class="text-[10px] text-gray-400">Expiry Date</label>
+                <input type="date" name="expiry_date" required class="w-full bg-black p-3 rounded border border-gray-700">
+            </div>
+        </div>
+
         <input type="text" name="mikrotik_username" placeholder="Mikrotik Username (Real ID)" required class="w-full bg-black p-3 rounded border border-gray-700">
         <input type="text" name="full_name" placeholder="Full Name" required class="w-full bg-black p-3 rounded border border-gray-700">
         <input type="text" name="mobile_number" placeholder="Mobile Number" required class="w-full bg-black p-3 rounded border border-gray-700">
