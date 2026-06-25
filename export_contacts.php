@@ -1,35 +1,44 @@
 <?php
 /**
- * PPO (Internet Users) Backup Export Module
- * Version: 1.0 (Secure)
+ * Contacts Export Module
+ * এই ফাইলটি আপনার কন্টাক্ট লিস্টকে CSV ফরম্যাটে ডাউনলোড করবে।
  */
 require_once 'config/db.php';
-if (session_status() === PHP_SESSION_NONE) session_start();
 
+// সেশন চেক
+if (session_status() === PHP_SESSION_NONE) session_start();
 if (!isset($_SESSION['admin_id'])) {
     die("Unauthorized Access");
 }
 
-$filename = "ppo_backup_" . date('Y-m-d') . ".csv";
+// ফাইলের নাম সেট করা
+$filename = "contacts_export_" . date('Y-m-d') . ".csv";
 
+// হেডার সেট করা যাতে ব্রাউজার ফাইলটি ডাউনলোড করে
 header('Content-Type: text/csv; charset=utf-8');
 header('Content-Disposition: attachment; filename="' . $filename . '"');
 
+// আউটপুট স্ট্রিম ওপেন করা
 $output = fopen('php://output', 'w');
+
+// বাংলা ক্যারেক্টার সাপোর্ট করার জন্য BOM যোগ করা
 fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
 
-// Internet Users (PPO) table headers
-fputcsv($output, ['Fifi ID', 'User Name', 'Mobile Number', 'Address', 'Package Price', 'Status'], ',');
+// ১. CSV হেডার (Name এবং Phone 1 - Value)
+fputcsv($output, ['Name', 'Phone 1 - Value']);
 
-$query = "SELECT fifi_id, user_name, mobile_number, address, package_price, status FROM internet_users ORDER BY id DESC";
+// ২. ডাটাবেস থেকে ডাটা ফেচ করা
+$query = "SELECT customer_name, mobile_number FROM customers ORDER BY id DESC";
 $result = $conn->query($query);
 
 if ($result && $result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
-        fputcsv($output, $row, ',');
+        // ৩. নাম এবং নাম্বার রাইট করা
+        fputcsv($output, [$row['customer_name'], $row['mobile_number']]);
     }
 }
 
+// ফাইল ক্লোজ করে এক্সিট
 fclose($output);
 exit();
 ?>
