@@ -11,7 +11,7 @@ if (isset($_GET['delete'])) {
     header("Location: manage_user_status.php"); exit();
 }
 
-// ২. ব্লক/আনব্লক লজিক (Active <-> Inactive)
+// ২. ব্লক/আনব্লক লজিক
 if (isset($_GET['toggle_status'])) {
     $id = $_GET['toggle_status'];
     $current = $_GET['current'];
@@ -51,10 +51,14 @@ $users = $conn->query($sql);
             <div class="bg-gray-900 p-4 rounded-2xl border border-gray-800 flex justify-between items-center">
                 <div>
                     <h2 class="font-bold"><?= htmlspecialchars($row['full_name']) ?></h2>
-                    <p class="text-xs text-purple-400"><?= htmlspecialchars($row['mikrotik_username']) ?> | 
-                        <span class="<?= $row['status'] == 'Active' ? 'text-green-500' : 'text-red-500' ?> font-bold">
+                    <p class="text-[10px] text-purple-400 uppercase font-bold">
+                        ID: <?= htmlspecialchars($row['mikrotik_username']) ?> | 
+                        STATUS: <span class="<?= $row['status'] == 'Active' ? 'text-green-500' : 'text-red-500' ?>">
                             <?= $row['status'] ?>
                         </span>
+                    </p>
+                    <p class="text-[10px] text-gray-500 mt-1">
+                        ACTIVATED: <?= $row['activation_date'] ?> | EXPIRE: <?= $row['expiry_date'] ?>
                     </p>
                 </div>
                 <div class="flex gap-2">
