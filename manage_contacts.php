@@ -1,3 +1,11 @@
+<?php
+// ১. সেশন শুরু এবং সিকিউরিটি চেক
+session_start();
+if (!isset($_SESSION['admin_id'])) { 
+    header("Location: login.php"); 
+    exit(); 
+}
+?>
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -51,7 +59,7 @@
             <span class="font-black text-xs uppercase text-center">Export Contacts</span>
         </a>
 
-        </main>
+    </main>
 
 </body>
 </html>
