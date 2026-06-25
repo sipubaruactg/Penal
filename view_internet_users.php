@@ -58,6 +58,14 @@ $users = $conn->query($sql);
             <p id="m_address" class="text-lg text-gray-400"></p>
             <p id="m_package" class="text-lg font-bold"></p>
             <p id="m_price" class="text-xl font-black text-emerald-400"></p>
+            
+            <div class="bg-black p-4 rounded-xl border border-gray-800">
+                <p class="text-[10px] text-gray-500 uppercase">Activation Date</p>
+                <p id="m_act_date" class="font-bold"></p>
+                <p class="text-[10px] text-gray-500 uppercase mt-2">Expiry Date</p>
+                <p id="m_exp_date" class="font-bold text-red-400"></p>
+            </div>
+
             <button onclick="document.getElementById('detailModal').classList.add('hidden')" class="w-full bg-gray-800 py-3 rounded-xl font-black uppercase">Close</button>
         </div>
     </div>
@@ -71,6 +79,8 @@ $users = $conn->query($sql);
             document.getElementById('m_address').innerText = "📍 " + data.address;
             document.getElementById('m_package').innerText = "📦 " + data.package_name;
             document.getElementById('m_price').innerText = "৳" + data.package_price;
+            document.getElementById('m_act_date').innerText = data.activation_date; // তারিখ
+            document.getElementById('m_exp_date').innerText = data.expiry_date;     // তারিখ
             document.getElementById('detailModal').classList.remove('hidden');
         }
     </script>
