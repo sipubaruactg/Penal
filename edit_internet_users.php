@@ -13,9 +13,11 @@ if (isset($_POST['update_user'])) {
     $p_name = $_POST['package_name'];
     $p_price = $_POST['package_price'];
     $status = $_POST['status'];
+    $act_date = $_POST['activation_date'];
+    $exp_date = $_POST['expiry_date'];
 
-    $stmt = $conn->prepare("UPDATE internet_users SET mikrotik_username=?, full_name=?, mobile_number=?, address=?, package_name=?, package_price=?, status=? WHERE id=?");
-    $stmt->bind_param("sssssdsi", $m_user, $f_name, $mobile, $address, $p_name, $p_price, $status, $id);
+    $stmt = $conn->prepare("UPDATE internet_users SET mikrotik_username=?, full_name=?, mobile_number=?, address=?, package_name=?, package_price=?, status=?, activation_date=?, expiry_date=? WHERE id=?");
+    $stmt->bind_param("sssssdsssi", $m_user, $f_name, $mobile, $address, $p_name, $p_price, $status, $act_date, $exp_date, $id);
     $stmt->execute();
 }
 
@@ -46,25 +48,32 @@ $users = $conn->query($sql);
         <?php while($row = $users->fetch_assoc()): ?>
             <div onclick="openEditModal(<?= htmlspecialchars(json_encode($row)) ?>)" class="bg-gray-900 p-6 rounded-2xl border border-gray-800 cursor-pointer hover:border-amber-500">
                 <h2 class="text-lg font-black"><?= htmlspecialchars($row['full_name']) ?></h2>
-                <p class="text-purple-400 font-mono text-sm"><?= htmlspecialchars($row['mikrotik_username']) ?></p>
+                <p class="text-purple-400 font-mono text-sm">ID: <?= htmlspecialchars($row['mikrotik_username']) ?> | Exp: <?= $row['expiry_date'] ?></p>
             </div>
         <?php endwhile; ?>
     </div>
 
-    <div id="editModal" class="hidden fixed inset-0 bg-black/95 p-4 flex items-center justify-center">
+    <div id="editModal" class="hidden fixed inset-0 bg-black/95 p-4 flex items-center justify-center overflow-y-auto">
         <form method="POST" class="bg-gray-900 p-6 rounded-3xl w-full border border-gray-700 space-y-3">
             <input type="hidden" name="user_id" id="edit_id">
-            <input type="text" name="mikrotik_username" id="edit_m_user" class="w-full bg-black p-3 rounded border border-gray-700">
-            <input type="text" name="full_name" id="edit_name" class="w-full bg-black p-3 rounded border border-gray-700">
-            <input type="text" name="mobile_number" id="edit_mobile" class="w-full bg-black p-3 rounded border border-gray-700">
-            <input type="text" name="address" id="edit_address" class="w-full bg-black p-3 rounded border border-gray-700">
+            
+            <label class="text-[10px] text-gray-400 uppercase">Activation Date</label>
+            <input type="date" name="activation_date" id="edit_act_date" class="w-full bg-black p-3 rounded border border-gray-700 text-white">
+            
+            <label class="text-[10px] text-gray-400 uppercase">Expiry Date</label>
+            <input type="date" name="expiry_date" id="edit_exp_date" class="w-full bg-black p-3 rounded border border-gray-700 text-white">
+            
+            <input type="text" name="mikrotik_username" id="edit_m_user" placeholder="Mikrotik Username" class="w-full bg-black p-3 rounded border border-gray-700">
+            <input type="text" name="full_name" id="edit_name" placeholder="Full Name" class="w-full bg-black p-3 rounded border border-gray-700">
+            <input type="text" name="mobile_number" id="edit_mobile" placeholder="Mobile Number" class="w-full bg-black p-3 rounded border border-gray-700">
+            <input type="text" name="address" id="edit_address" placeholder="Address" class="w-full bg-black p-3 rounded border border-gray-700">
             <select name="package_name" id="edit_package" class="w-full bg-black p-3 rounded border border-gray-700">
                 <option value="Basic Package (5 Mbps)">Basic Package (5 Mbps)</option>
                 <option value="Standard Package (10 Mbps)">Standard Package (10 Mbps)</option>
                 <option value="Premium Package (20 Mbps)">Premium Package (20 Mbps)</option>
                 <option value="Gaming Package (30 Mbps)">Gaming Package (30 Mbps)</option>
             </select>
-            <input type="number" name="package_price" id="edit_price" class="w-full bg-black p-3 rounded border border-gray-700">
+            <input type="number" name="package_price" id="edit_price" placeholder="Price" class="w-full bg-black p-3 rounded border border-gray-700">
             <select name="status" id="edit_status" class="w-full bg-black p-3 rounded border border-gray-700">
                 <option value="Active">Active</option>
                 <option value="Inactive">Inactive</option>
@@ -77,6 +86,8 @@ $users = $conn->query($sql);
     <script>
         function openEditModal(data) {
             document.getElementById('edit_id').value = data.id;
+            document.getElementById('edit_act_date').value = data.activation_date;
+            document.getElementById('edit_exp_date').value = data.expiry_date;
             document.getElementById('edit_m_user').value = data.mikrotik_username;
             document.getElementById('edit_name').value = data.full_name;
             document.getElementById('edit_mobile').value = data.mobile_number;
