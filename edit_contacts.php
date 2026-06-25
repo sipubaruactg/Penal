@@ -27,7 +27,7 @@ $contacts = $conn->query("SELECT * FROM customers ORDER BY id DESC");
 
 <form method="POST" action="edit_contacts.php" class="flex flex-col h-screen">
     <header class="p-4 border-b border-gray-800 flex justify-between items-center">
-        <a href="dashboard.php" class="bg-gray-800 px-4 py-2 rounded-xl text-xs font-black">BACK</a>
+        <a href="manage_contacts.php" class="bg-gray-800 px-4 py-2 rounded-xl text-xs font-black">BACK</a>
         <h1 class="font-black text-sm uppercase">EDIT & DELETE</h1>
         <button type="submit" name="bulk_delete" class="bg-red-600 px-4 py-2 rounded-xl text-[10px] font-black" onclick="return confirm('Delete Selected?')">DEL ALL</button>
     </header>
