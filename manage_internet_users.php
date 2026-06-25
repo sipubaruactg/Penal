@@ -1,51 +1,3 @@
-<?php
-/**
- * Internet Users Management Module
- * Version: 2.0 (Secure)
- */
-require_once 'config/db.php';
-if (session_status() === PHP_SESSION_NONE) session_start();
-
-if (!isset($_SESSION['admin_id'])) {
-    header("Location: login.php");
-    exit();
-}
-
-$message = "";
-
-// ১. ডাটা সেভ / এডিট প্রসেসিং
-if (isset($_POST['save_user'])) {
-    $id = $_POST['user_id'];
-    $fifi_id = $_POST['fifi_id'];
-    $user_name = $_POST['user_name'];
-    $mobile_number = $_POST['mobile_number'];
-    $address = $_POST['address'];
-    $package_price = $_POST['package_price'];
-    $status = $_POST['status'];
-
-    if (!empty($id)) {
-        $stmt = $conn->prepare("UPDATE internet_users SET fifi_id=?, user_name=?, mobile_number=?, address=?, package_price=?, status=? WHERE id=?");
-        $stmt->bind_param("ssssssi", $fifi_id, $user_name, $mobile_number, $address, $package_price, $status, $id);
-        if ($stmt->execute()) $message = "User updated successfully!";
-    } else {
-        $stmt = $conn->prepare("INSERT INTO internet_users (fifi_id, user_name, mobile_number, address, package_price, status) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssssss", $fifi_id, $user_name, $mobile_number, $address, $package_price, $status);
-        if ($stmt->execute()) $message = "New user added successfully!";
-    }
-}
-
-// ২. ডাটা ডিলিট প্রসেসিং
-if (isset($_GET['delete'])) {
-    $stmt = $conn->prepare("DELETE FROM internet_users WHERE id=?");
-    $stmt->bind_param("i", $_GET['delete']);
-    $stmt->execute();
-    header("Location: manage_internet_users.php");
-    exit();
-}
-
-$users = $conn->query("SELECT * FROM internet_users ORDER BY id DESC");
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -60,10 +12,16 @@ $users = $conn->query("SELECT * FROM internet_users ORDER BY id DESC");
 </head>
 <body class="bg-gray-950 text-white font-sans flex flex-col h-screen max-w-md mx-auto border-x border-gray-800">
 
-    <header class="bg-gray-900 border-b border-gray-800 py-4 px-4 text-center shrink-0">
-        <h1 class="text-lg font-black uppercase tracking-widest text-purple-400">Internet Users</h1>
-        <?php if($message): ?><p class="text-[10px] text-emerald-400 mt-1"><?= $message ?></p><?php endif; ?>
-    </header>
+    <header class="bg-gray-900 border-b border-gray-800 p-4 shrink-0 flex items-center justify-between">
+        <a href="dashboard.php" class="bg-gray-800 px-4 py-2 rounded-lg text-[10px] font-black uppercase">← BACK</a>
+        <h1 class="text-sm font-black uppercase tracking-widest text-purple-400">Internet Users</h1>
+        <div class="w-12"></div> </header>
+
+    <?php if($message): ?>
+        <div class="bg-gray-900 text-center py-1">
+            <p class="text-[10px] text-emerald-400"><?= $message ?></p>
+        </div>
+    <?php endif; ?>
 
     <div class="p-4 bg-gray-900/50 border-b border-gray-800 shrink-0">
         <form action="manage_internet_users.php" method="POST" id="userForm" class="space-y-2">
@@ -94,7 +52,7 @@ $users = $conn->query("SELECT * FROM internet_users ORDER BY id DESC");
                 </div>
                 <div class="flex space-x-2">
                     <button onclick='editUser(<?= json_encode($row) ?>)' class="bg-amber-600/20 text-amber-400 px-3 py-1 text-[10px] font-bold rounded-lg">EDIT</button>
-                    <a href="manage_internet_users.php?delete=<?= $row['id'] ?>" class="bg-red-600/20 text-red-400 px-3 py-1 text-[10px] font-bold rounded-lg">DEL</a>
+                    <a href="manage_internet_users.php?delete=<?= $row['id'] ?>" class="bg-red-600/20 text-red-400 px-3 py-1 text-[10px] font-bold rounded-lg" onclick="return confirm('Delete this user?')">DEL</a>
                 </div>
             </div>
         <?php endwhile; ?>
