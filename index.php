@@ -42,20 +42,12 @@ if (!isset($_SESSION['admin_id'])) { header("Location: login.php"); exit(); }
                 <div class="text-4xl mb-3">📞</div>
                 <div id="m2" class="text-[11px] font-black uppercase tracking-widest text-center px-2">MANAGE CONTACTS</div>
             </a>
-            <a href="export_contacts.php" class="menu-btn">
-                <div class="text-4xl mb-3">📥</div>
-                <div id="m3" class="text-[11px] font-black uppercase tracking-widest text-center px-2">EXPORT CONTACTS</div>
-            </a>
-            <a href="export_ppo.php" class="menu-btn">
-                <div class="text-4xl mb-3">📤</div>
-                <div id="m4" class="text-[11px] font-black uppercase tracking-widest text-center px-2">EXPORT PPO ID</div>
-            </a>
         </div>
 
         <div class="px-4 mt-2">
             <a href="edit_profile.php" class="menu-btn w-full flex-row space-x-4 mb-4" style="height: 70px;">
                 <div class="text-3xl">⚙️</div>
-                <div id="m5" class="text-[11px] font-black uppercase tracking-widest">EDIT PROFILE</div>
+                <div id="m3" class="text-[11px] font-black uppercase tracking-widest">EDIT PROFILE</div>
             </a>
 
             <div class="flex justify-center w-full">
@@ -96,9 +88,7 @@ if (!isset($_SESSION['admin_id'])) { header("Location: login.php"); exit(); }
             isBangla = !isBangla;
             document.getElementById('m1').innerText = isBangla ? "ইন্টারনেট ইউজার" : "INTERNET USERS";
             document.getElementById('m2').innerText = isBangla ? "কন্টাক্ট ম্যানেজ" : "MANAGE CONTACTS";
-            document.getElementById('m3').innerText = isBangla ? "কন্টাক্ট এক্সপোর্ট" : "EXPORT CONTACTS";
-            document.getElementById('m4').innerText = isBangla ? "পি পি ও এক্সপোর্ট" : "EXPORT PPO ID";
-            document.getElementById('m5').innerText = isBangla ? "প্রোফাইল এডিট" : "EDIT PROFILE";
+            document.getElementById('m3').innerText = isBangla ? "প্রোফাইল এডিট" : "EDIT PROFILE";
             updateDisplay();
         }
     </script>
