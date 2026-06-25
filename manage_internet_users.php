@@ -1,51 +1,64 @@
 <?php
-require_once 'config/db.php';
-if (session_status() === PHP_SESSION_NONE) session_start();
-if (!isset($_SESSION['admin_id'])) { header("Location: login.php"); exit(); }
-
-// সার্চ এবং লিস্ট লজিক এখানে থাকবে...
-$search = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
-$sql = "SELECT * FROM internet_users WHERE full_name LIKE '%$search%' OR mikrotik_username LIKE '%$search%' ORDER BY id DESC";
-$users = $conn->query($sql);
+session_start();
+if (!isset($_SESSION['admin_id'])) { 
+    header("Location: login.php"); 
+    exit(); 
+}
 ?>
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Internet Users</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { 
+            background-color: #030712; 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            overflow-y: auto; 
+        }
+    </style>
 </head>
-<body class="bg-gray-950 text-white p-4">
+<body class="text-white">
 
-    <a href="dashboard.php" class="bg-gray-800 px-4 py-2 rounded-lg text-[10px] font-black uppercase">← BACK TO DASHBOARD</a>
+    <header class="p-4 sticky top-0 bg-[#030712]/90 backdrop-blur-sm z-10">
+        <a href="index.php" class="inline-block bg-gray-800 px-5 py-2 rounded-xl text-xs font-black uppercase">← BACK</a>
+    </header>
 
-    <h1 class="text-xl font-black text-purple-400 mt-6 mb-6 text-center uppercase">Internet User Management</h1>
-
-    <div class="grid grid-cols-2 gap-3 mb-8">
-        <a href="create_internet_user.php" class="bg-purple-900/30 border border-purple-800 p-4 rounded-xl text-center font-bold text-xs">ADD NEW USER</a>
-        <a href="view_internet_users.php" class="bg-gray-800 border border-gray-700 p-4 rounded-xl text-center font-bold text-xs">VIEW ALL USERS</a>
-        <a href="edit_internet_users.php" class="bg-gray-800 border border-gray-700 p-4 rounded-xl text-center font-bold text-xs">EDIT USERS</a>
-        <a href="manage_user_status.php" class="bg-red-900/30 border border-red-800 p-4 rounded-xl text-center font-bold text-xs">BLOCK / DELETE</a>
+    <div class="text-center py-2">
+        <h1 class="text-purple-500 font-black text-2xl uppercase tracking-widest">Internet Users</h1>
     </div>
 
-    <form method="GET" class="mb-6">
-        <input type="text" name="search" value="<?= htmlspecialchars($search) ?>" placeholder="Search users..." class="w-full bg-gray-900 p-4 rounded-xl border border-gray-700">
-    </form>
+    <main class="grid grid-cols-2 gap-4 p-6 content-start pb-10">
+        
+        <a href="view_internet_users.php" class="bg-gray-900 border border-gray-800 p-6 rounded-3xl flex flex-col items-center justify-center gap-3 hover:border-purple-600 transition-all">
+            <span class="text-4xl">🔍</span>
+            <span class="font-black text-[10px] uppercase text-center">View Users</span>
+        </a>
 
-    <div class="space-y-3">
-        <?php while($row = $users->fetch_assoc()): ?>
-            <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 flex justify-between items-center">
-                <div>
-                    <h2 class="font-bold text-sm"><?= htmlspecialchars($row['full_name']) ?></h2>
-                    <p class="text-[10px] text-purple-400 font-mono"><?= htmlspecialchars($row['mikrotik_username']) ?></p>
-                </div>
-                <span class="px-2 py-1 rounded bg-black text-[9px] font-bold <?= $row['status'] == 'Active' ? 'text-green-500' : 'text-red-500' ?>">
-                    <?= $row['status'] ?>
-                </span>
-            </div>
-        <?php endwhile; ?>
-    </div>
+        <a href="create_internet_user.php" class="bg-gray-900 border border-gray-800 p-6 rounded-3xl flex flex-col items-center justify-center gap-3 hover:border-purple-600 transition-all">
+            <span class="text-4xl">➕</span>
+            <span class="font-black text-[10px] uppercase text-center">Add New User</span>
+        </a>
+
+        <a href="edit_internet_users.php" class="bg-gray-900 border border-gray-800 p-6 rounded-3xl flex flex-col items-center justify-center gap-3 hover:border-purple-600 transition-all">
+            <span class="text-4xl">✏️</span>
+            <span class="font-black text-[10px] uppercase text-center">Edit Info</span>
+        </a>
+
+        <a href="manage_user_status.php" class="bg-gray-900 border border-gray-800 p-6 rounded-3xl flex flex-col items-center justify-center gap-3 hover:border-purple-600 transition-all">
+            <span class="text-4xl">🚫</span>
+            <span class="font-black text-[10px] uppercase text-center">Block / Del</span>
+        </a>
+
+        <a href="export_ppo.php" class="bg-gray-900 border border-gray-800 p-6 rounded-3xl flex flex-col items-center justify-center gap-3 hover:border-purple-600 transition-all">
+            <span class="text-4xl">📤</span>
+            <span class="font-black text-[10px] uppercase text-center">Export PPO ID</span>
+        </a>
+
+    </main>
+
 </body>
 </html>
