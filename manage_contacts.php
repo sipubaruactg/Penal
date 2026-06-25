@@ -35,28 +35,28 @@ if (!isset($_SESSION['admin_id'])) {
     <main class="grid grid-cols-2 gap-4 p-6 content-start pb-10">
         
         <a href="view_contacts.php" class="bg-gray-900 border border-gray-800 p-6 rounded-3xl flex flex-col items-center justify-center gap-3 hover:border-indigo-600 transition-all">
-            <span class="text-3xl">📞</span>
-            <span class="font-black text-xs uppercase text-center">View Contacts</span>
+            <span class="text-4xl">📞</span>
+            <span class="font-black text-[10px] uppercase text-center">View Contacts</span>
         </a>
 
         <a href="input_contact.php" class="bg-gray-900 border border-gray-800 p-6 rounded-3xl flex flex-col items-center justify-center gap-3 hover:border-indigo-600 transition-all">
-            <span class="text-3xl">📁</span>
-            <span class="font-black text-xs uppercase text-center">File Import</span>
+            <span class="text-4xl">📁</span>
+            <span class="font-black text-[10px] uppercase text-center">File Import</span>
         </a>
 
         <a href="manual_contacts.php" class="bg-gray-900 border border-gray-800 p-6 rounded-3xl flex flex-col items-center justify-center gap-3 hover:border-indigo-600 transition-all">
-            <span class="text-3xl">📝</span>
-            <span class="font-black text-xs uppercase text-center">Manual Input</span>
+            <span class="text-4xl">📝</span>
+            <span class="font-black text-[10px] uppercase text-center">Manual Input</span>
         </a>
 
         <a href="edit_contacts.php" class="bg-gray-900 border border-gray-800 p-6 rounded-3xl flex flex-col items-center justify-center gap-3 hover:border-indigo-600 transition-all">
-            <span class="text-3xl">⚙️</span>
-            <span class="font-black text-xs uppercase text-center">Edit / Delete</span>
+            <span class="text-4xl">⚙️</span>
+            <span class="font-black text-[10px] uppercase text-center">Edit / Delete</span>
         </a>
 
         <a href="export_contacts.php" class="bg-gray-900 border border-gray-800 p-6 rounded-3xl flex flex-col items-center justify-center gap-3 hover:border-indigo-600 transition-all">
-            <span class="text-3xl">📊</span>
-            <span class="font-black text-xs uppercase text-center">Export Contacts</span>
+            <span class="text-4xl">📊</span>
+            <span class="font-black text-[10px] uppercase text-center">Export Contacts</span>
         </a>
 
     </main>
