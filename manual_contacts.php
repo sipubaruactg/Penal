@@ -32,7 +32,11 @@ if (isset($_POST['save_contact'])) {
 </head>
 <body class="flex flex-col h-screen p-6 text-white">
 
-    <h2 class="text-center font-black text-xl uppercase tracking-widest py-4">MANUAL INPUT</h2>
+    <header class="mb-4">
+        <a href="manage_contacts.php" class="inline-block bg-gray-800 px-5 py-2 rounded-xl text-xs font-black uppercase">← BACK</a>
+    </header>
+
+    <h2 class="text-center font-black text-xl uppercase tracking-widest py-2">MANUAL INPUT</h2>
 
     <?php if($msg): ?>
         <div class="bg-green-600 text-center font-black py-3 rounded-2xl mb-4 animate-pulse"><?= $msg ?></div>
@@ -48,8 +52,6 @@ if (isset($_POST['save_contact'])) {
         
         <button type="submit" name="save_contact" class="w-full bg-blue-600 py-4 rounded-xl font-black text-lg uppercase mt-2">SAVE CONTACT</button>
     </form>
-
-    <a href="dashboard.php" class="block w-full bg-gray-800 text-center py-4 rounded-2xl font-black text-sm uppercase mt-4">BACK</a>
 
 </body>
 </html>
