@@ -10,11 +10,15 @@
 </head>
 <body class="text-white">
 
-    <header class="p-8 text-center border-b border-gray-800">
-        <h1 class="text-indigo-500 font-black text-2xl uppercase tracking-widest">Contact Dashboard</h1>
+    <header class="p-4">
+        <a href="index.php" class="inline-block bg-gray-800 px-5 py-2 rounded-xl text-xs font-black uppercase">← BACK</a>
     </header>
 
-    <main class="flex-grow grid grid-cols-2 gap-4 p-6 content-center">
+    <div class="text-center py-6">
+        <h1 class="text-indigo-500 font-black text-2xl uppercase tracking-widest">Contact Dashboard</h1>
+    </div>
+
+    <main class="flex-grow grid grid-cols-2 gap-4 p-6 content-start">
         <a href="view_contacts.php" class="bg-gray-900 border border-gray-800 p-6 rounded-3xl flex flex-col items-center justify-center gap-3 hover:border-indigo-600 transition-all">
             <span class="text-3xl">📞</span>
             <span class="font-black text-xs uppercase">View Contacts</span>
@@ -32,12 +36,6 @@
             <span class="font-black text-xs uppercase">Edit / Delete</span>
         </a>
     </main>
-
-    <footer class="p-6 border-t border-gray-800">
-        <a href="index.php" class="block w-full bg-gray-900 text-center py-5 rounded-2xl font-black text-sm uppercase tracking-widest text-gray-400 hover:bg-gray-800">
-            ← BACK TO HOME
-        </a>
-    </footer>
 
 </body>
 </html>
